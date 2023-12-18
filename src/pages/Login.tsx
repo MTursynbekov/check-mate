@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Form from '../components/styled/Form';
 import { StoreContext } from '../store';
 import { InMemoryDB } from '../inmemorydb';
+import { jwtDecode } from 'jwt-decode';
+import { signIn } from '../components/signIn';
 
 interface Props {
 	db: InMemoryDB;
@@ -14,25 +16,30 @@ const Login: React.FC<Props> = ({ db }) => {
 		useContext(StoreContext);
 	const navigate = useNavigate();
 
-	const handleSubmit = (e: React.SyntheticEvent) => {
+	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const target = e.target as typeof e.target & {
 		  [index: number]: { value: string };
 		};
 		const username = target[0].value;
 		const password = target[1].value;
-	
-		const userId = db.validateUser(username, password);
-    	if (userId) {
-      		setUser(username);
-     		setLoggedIn(true);
-      		setUserId(userId); 
-      		setContacts(db.getContactsForUser(userId));
-      		navigate('/dashboard');
-    	}  else {
-		  	window.alert('Invalid username or password');
-		}
-	  };
+		
+
+	try {
+      	const response = await signIn({ username, password: password});
+      	const token = response.token;
+ 
+      	const decodedToken: { userId: number } = jwtDecode(token);
+      	setUserId(decodedToken.userId);
+      	setUser(username);
+      	setLoggedIn(true);
+	  	setContacts(db.getContactsForUser(decodedToken.userId));
+      	navigate('/dashboard');
+    } catch (error) {
+      console.error('Signin failed:', error);
+    }
+    	
+	};
 
 	return (
 		<>

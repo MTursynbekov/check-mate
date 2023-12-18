@@ -4,6 +4,8 @@ import SubmitDiv from '../components/styled/SubmitDiv';
 import Form from '../components/styled/Form';
 import { StoreContext } from '../store';
 import { InMemoryDB } from '../inmemorydb';
+import { signUp } from '../components/signUp';
+import { jwtDecode } from 'jwt-decode';
 
 interface Props {
   db: InMemoryDB;
@@ -13,7 +15,7 @@ const Signup: React.FC<Props> = ({ db }) => {
   const { setUser, setLoggedIn, setUserId } = useContext(StoreContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       [index: number]: { value: string };
@@ -33,11 +35,20 @@ const Signup: React.FC<Props> = ({ db }) => {
       return;
     }
 
-    const userId = db.addUser(username, password1, phoneNumber);
-    setUser(username);
-    setUserId(userId);
-    setLoggedIn(true);
-    navigate('/dashboard');
+    try {
+      const response = await signUp({ username, password: password1, phone: phoneNumber });
+      const token = response.token;
+
+      
+      const decodedToken: { userId: number } = jwtDecode(token);
+      setUserId(decodedToken.userId);
+      setUser(username);
+      setLoggedIn(true);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Signup failed:', error);
+    }
+      
   };
 
   return (
