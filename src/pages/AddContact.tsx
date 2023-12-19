@@ -41,7 +41,7 @@ const AddContact: React.FC<Props> = ({ db }) => {
     const phoneNumber = target[2].value;
     const relationship = target[3].value;
     const daysBeforeReminder = parseInt(target[4].value);
-    const birthday = target[5].value;
+    const birthday = target[5].value + 'T00:00:00Z';
 
 	console.log(userId)
 

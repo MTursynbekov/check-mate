@@ -47,7 +47,7 @@ const Contact: React.FC<Props> = ({ db }) => {
 					✏️
 				</span>
 				<h2>
-					{currentContact.firstName} {currentContact.lastName}
+					{currentContact.name} {currentContact.surname}
 				</h2>
 				<div style={{ marginTop: '10px' }}>
 					<h3>📞 {currentContact.phoneNumber}</h3>

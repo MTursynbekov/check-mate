@@ -27,21 +27,24 @@ function Dashboard() {
 	}
 
 	const contactElements = [];
-	contacts.forEach((contact) => {
-		contactElements.push(
-			<div className='contact-wrapper'>
-				<img
-					className='relat-icon'
-					src={iconSrc(contact.relationship)}
-					onClick={() => {
-						navigate(`/contact/${contact.id}`);
-						setCurrentContact(contact);
-					}}
-				/>
-				<p>{contact.name}</p>
-			</div>
-		)
-	});
+	if (contacts !== null) {
+		contacts.forEach((contact) => {
+			contactElements.push(
+				<div className='contact-wrapper'>
+					<img
+						className='relat-icon'
+						src={iconSrc(contact.relationship)}
+						onClick={() => {
+							navigate(`/contact/${contact.id}`);
+							setCurrentContact(contact);
+						}}
+					/>
+					<p>{contact.name}</p>
+				</div>
+			)
+		});
+	}
+
 
 	return (
 		<>
