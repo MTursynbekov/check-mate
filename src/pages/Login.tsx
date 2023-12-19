@@ -6,13 +6,14 @@ import { StoreContext } from '../store';
 import { InMemoryDB } from '../inmemorydb';
 import { jwtDecode } from 'jwt-decode';
 import { signIn } from '../components/signIn';
+import Token from './Token';
 
 interface Props {
 	db: InMemoryDB;
-  }
+}
 
 const Login: React.FC<Props> = ({ db }) => {
-	const { setUser, setLoggedIn, setUserId, setContacts } =
+	const { setUser, setToken, setLoggedIn, setUserId, setContacts } =
 		useContext(StoreContext);
 	const navigate = useNavigate();
 
@@ -25,20 +26,21 @@ const Login: React.FC<Props> = ({ db }) => {
 		const password = target[1].value;
 		
 
-	try {
-      	const response = await signIn({ username, password: password});
-      	const token = response.token;
- 
-      	const decodedToken: { userId: number } = jwtDecode(token);
-      	setUserId(decodedToken.userId);
-      	setUser(username);
-      	setLoggedIn(true);
-	  	setContacts(db.getContactsForUser(decodedToken.userId));
-      	navigate('/dashboard');
-    } catch (error) {
-      console.error('Signin failed:', error);
-    }
-    	
+		try {
+			const response = await signIn({ username, password: password});
+			const token = response.token;
+	
+			const decodedToken: { userId: number } = jwtDecode(token);
+			setUserId(decodedToken.userId);
+			setToken(token);
+			Token.accessToken = token
+			setUser(username);
+			setLoggedIn(true);
+			setContacts(await db.getContactsForUser(decodedToken.userId));
+			navigate('/dashboard');
+		} catch (error) {
+			console.error('Signin failed:', error);
+		}
 	};
 
 	return (

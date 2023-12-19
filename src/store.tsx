@@ -3,6 +3,7 @@ import React from 'react';
 export const StoreContext = React.createContext(null);
 export default ({ children }) => {
 	const [user, setUser] = React.useState('');
+	const [token, setToken] = React.useState('');
 	const [loggedIn, setLoggedIn] = React.useState(false);
 	const [currentContact, setCurrentContact] = React.useState({});
 	const [userId, setUserId] = React.useState('');
@@ -15,6 +16,8 @@ export default ({ children }) => {
 			value={{
 				user,
 				setUser,
+				token,
+				setToken,
 				loggedIn,
 				setLoggedIn,
 				currentContact,
