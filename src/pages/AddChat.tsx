@@ -26,9 +26,9 @@ const AddChat: React.FC<Props> = ({ db }) => {
 		const rating = e.target[2].value;
 
 
-		if (userId != null && currentContact?.contactId != null) {
-			db.addChat(userId, currentContact.contactId, date, messageText, rating);
-			navigate(`/contact/${currentContact.contactId}`);
+		if (userId != null && currentContact?.id != null) {
+			db.addChat(userId, currentContact.id, date, messageText, rating);
+			navigate(`/contact/${currentContact.id}`);
 		} else {
 			console.error('User ID or contact ID is missing');
 		}

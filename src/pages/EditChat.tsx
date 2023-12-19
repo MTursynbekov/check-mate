@@ -28,7 +28,7 @@ const EditChat: React.FC<Props> = ({ db }) => {
 	  const success = db.updateChat(currentMessage.chatId, {
 		chatId: currentMessage.chatId,
 		userId,
-		contactId: currentContact.contactId,
+		contactId: currentContact.id,
 		date,
 		messageText: message_text,
 		rating: Number(rating),
@@ -36,7 +36,7 @@ const EditChat: React.FC<Props> = ({ db }) => {
 	  
   
 	  if (success) {
-		navigate(`/contact/${currentContact.contactId}`);
+		navigate(`/contact/${currentContact.id}`);
 	  } else {
 		window.alert('Issue updating chat. Try again later.');
 	  }
