@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import DashDiv from '../components/styled/DashDiv';
 import { StoreContext } from '../store';
@@ -34,13 +34,13 @@ function Dashboard() {
 					className='relat-icon'
 					src={iconSrc(contact.relationship)}
 					onClick={() => {
-						navigate(`/contact/${contact.contactId}`);
+						navigate(`/contact/${contact.id}`);
 						setCurrentContact(contact);
 					}}
 				/>
-				<p>{contact.firstName}</p>
+				<p>{contact.name}</p>
 			</div>
-		);
+		)
 	});
 
 	return (

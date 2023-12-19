@@ -11,11 +11,21 @@ interface Props {
   db: InMemoryDB;
 }
 
+interface Contact {
+  id: number;
+  name: string;
+  surname: string;
+  phoneNumber: string;
+  relationship: string;
+  daysBeforeReminder: number;
+  birthday: string;
+}
+
 const AddContact: React.FC<Props> = ({ db }) => {
   const { userId, setContacts } = useContext(StoreContext);
   const navigate = useNavigate();
 
-  function handleSubmit(e: React.SyntheticEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       0: { value: string };
@@ -26,8 +36,8 @@ const AddContact: React.FC<Props> = ({ db }) => {
       5: { value: string };
     };
 
-    const firstName = target[0].value;
-    const lastName = target[1].value;
+    const name = target[0].value;
+    const surname = target[1].value;
     const phoneNumber = target[2].value;
     const relationship = target[3].value;
     const daysBeforeReminder = parseInt(target[4].value);
@@ -36,16 +46,17 @@ const AddContact: React.FC<Props> = ({ db }) => {
 	console.log(userId)
 
     if (userId != null) {
-      const contacts = db.addContact(userId, {
-        firstName,
-        lastName,
+      const id = await db.addContact( {
+        userId,
+        name,
+        surname,
         phoneNumber,
         relationship,
         daysBeforeReminder,
         birthday,
       });
 
-      setContacts(contacts);
+      setContacts(await db.getContactsForUser(userId));
       navigate('/dashboard');
     } else {
       console.error('User ID is null');
